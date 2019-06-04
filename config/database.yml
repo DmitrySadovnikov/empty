@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV.fetch('DATABASE_URL', '') %>
+  pool: <%= ENV.fetch('DB_POOL') { 25 } %>
+  timeout: 5000
+
+production:
+  <<: *default
+
+staging:
+  <<: *default
+
+development:
+  <<: *default
+
+test:
+  <<: *default
