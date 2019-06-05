@@ -8,5 +8,5 @@ Bundler.require(:default, ENV['SINATRA_ENV'])
 
 ActiveRecord::Base.schema_format = :sql
 
-require './app/controllers/application_controller'
+require_all 'config/initializers'
 require_all 'app'

@@ -13,6 +13,7 @@ gem 'bcrypt'
 gem 'tux'
 gem 'dry-initializer'
 gem 'curb', '= 0.9.7'
+gem 'transmission-rpc-ruby'
 
 group :development, :test do
   gem 'dotenv'
