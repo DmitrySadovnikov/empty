@@ -70,6 +70,7 @@ CREATE TABLE public.torrent_files (
     magnet_link character varying NOT NULL,
     status integer NOT NULL,
     transmission_id integer,
+    data jsonb,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );

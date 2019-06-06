@@ -4,6 +4,7 @@ class CreateTorrentFiles < ActiveRecord::Migration[5.2]
       t.string :magnet_link, null: false
       t.integer :status, null: false
       t.integer :transmission_id
+      t.jsonb :data
 
       t.timestamps
     end
