@@ -5,6 +5,8 @@ require 'rack/test'
 require 'capybara/rspec'
 require 'capybara/dsl'
 
+require_all 'spec/support'
+
 if ActiveRecord::MigrationContext.new('db/migrate').needs_migration?
   raise 'Migrations are pending. Run `rake db:migrate SINATRA_ENV=test` to resolve the issue.'
 end
@@ -16,6 +18,11 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.include Rack::Test::Methods
   config.include Capybara::DSL
+  config.include FactoryBot::Syntax::Methods
+  config.before(:suite) do
+    FactoryBot.find_definitions
+  end
+
   DatabaseCleaner.strategy = :truncation
 
   config.before do
