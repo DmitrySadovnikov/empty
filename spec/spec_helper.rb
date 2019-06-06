@@ -4,6 +4,8 @@ require_relative '../config/environment'
 require 'rack/test'
 require 'capybara/rspec'
 require 'capybara/dsl'
+require 'webmock/rspec'
+require 'sidekiq/testing'
 
 require_all 'spec/support'
 
@@ -19,9 +21,9 @@ RSpec.configure do |config|
   config.include Rack::Test::Methods
   config.include Capybara::DSL
   config.include FactoryBot::Syntax::Methods
-  config.before(:suite) do
-    FactoryBot.find_definitions
-  end
+  config.include SidekiqHelper
+  config.include TransmissionHelper
+  config.before(:suite) { FactoryBot.find_definitions }
 
   DatabaseCleaner.strategy = :truncation
 
