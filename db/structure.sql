@@ -67,7 +67,7 @@ CREATE TABLE public.schema_migrations (
 
 CREATE TABLE public.torrent_files (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    magnet character varying NOT NULL,
+    magnet_link character varying NOT NULL,
     status integer NOT NULL,
     transmission_id integer,
     created_at timestamp without time zone NOT NULL,

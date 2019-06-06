@@ -1,6 +1,8 @@
 class TorrentFile < ApplicationRecord
   include AASM
 
+  validates :magnet_link, format: { with: /magnet:\?xt=urn:btih:[a-zA-Z0-9]*/ }
+
   enum status: {
     pending: 1,
     done: 2
