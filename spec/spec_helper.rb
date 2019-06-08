@@ -20,9 +20,9 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.include Rack::Test::Methods
   config.include Capybara::DSL
-  config.include FactoryBot::Syntax::Methods
   config.include SidekiqHelper
   config.include TransmissionHelper
+  config.include FactoryBot::Syntax::Methods
   config.before(:suite) { FactoryBot.find_definitions }
 
   DatabaseCleaner.strategy = :truncation
