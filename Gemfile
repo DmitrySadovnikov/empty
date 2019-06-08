@@ -13,6 +13,12 @@ gem 'bcrypt'
 gem 'tux'
 gem 'dry-initializer'
 gem 'curb', '= 0.9.7'
+gem 'transmission-rpc-ruby'
+gem 'redis'
+gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
+gem 'sidekiq-cron'
+gem 'aasm'
 
 group :development, :test do
   gem 'dotenv'

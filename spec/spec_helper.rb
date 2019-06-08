@@ -4,6 +4,10 @@ require_relative '../config/environment'
 require 'rack/test'
 require 'capybara/rspec'
 require 'capybara/dsl'
+require 'webmock/rspec'
+require 'sidekiq/testing'
+
+require_all 'spec/support'
 
 if ActiveRecord::MigrationContext.new('db/migrate').needs_migration?
   raise 'Migrations are pending. Run `rake db:migrate SINATRA_ENV=test` to resolve the issue.'
@@ -16,6 +20,11 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.include Rack::Test::Methods
   config.include Capybara::DSL
+  config.include FactoryBot::Syntax::Methods
+  config.include SidekiqHelper
+  config.include TransmissionHelper
+  config.before(:suite) { FactoryBot.find_definitions }
+
   DatabaseCleaner.strategy = :truncation
 
   config.before do
