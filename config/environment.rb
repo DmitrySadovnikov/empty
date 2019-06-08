@@ -10,3 +10,4 @@ ActiveRecord::Base.schema_format = :sql
 
 require_all 'config/initializers'
 require_all 'app'
+require './app'
