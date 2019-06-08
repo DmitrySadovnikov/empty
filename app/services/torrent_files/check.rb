@@ -4,7 +4,7 @@ module TorrentFiles
 
     def call
       torrent = Transmission::Model::Torrent.find(torrent_file.transmission_id)
-      torrent_file.status_done! if torrent.percentDone == 1
+      torrent_file.status_downloaded! if torrent.percentDone == 1
 
       [:ok, torrent_file]
     end

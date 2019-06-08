@@ -1,21 +1,26 @@
 class TorrentFile < ApplicationRecord
   include AASM
 
+  belongs_to :user
+
+  validates :user, presence: true
   validates :magnet_link, format: { with: /magnet:\?xt=urn:btih:[a-zA-Z0-9]*/ }
 
   enum status: {
     pending: 1,
-    done: 2,
-    deleted: 3
+    downloaded: 2,
+    uploaded: 3
   }, _prefix: :status
 
   aasm column: :status, enum: true do
     after_all_transitions :log_state_change
 
     state :pending, initial: true
-    state :done
+    state :downloaded
+    state :uploaded
 
-    event(:status_done) { transitions from: :pending, to: :done }
+    event(:status_downloaded) { transitions from: :pending, to: :downloaded }
+    event(:status_uploaded) { transitions from: :downloaded, to: :uploaded }
   end
 
   store_accessor :data,

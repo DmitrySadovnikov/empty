@@ -19,6 +19,8 @@ gem 'sidekiq'
 gem 'sidekiq-unique-jobs'
 gem 'sidekiq-cron'
 gem 'aasm'
+gem 'omniauth-google-oauth2'
+gem 'google-api-client'
 
 group :development, :test do
   gem 'dotenv'

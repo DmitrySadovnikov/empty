@@ -67,10 +67,39 @@ CREATE TABLE public.schema_migrations (
 
 CREATE TABLE public.torrent_files (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    user_id uuid NOT NULL,
     magnet_link character varying NOT NULL,
     status integer NOT NULL,
     transmission_id integer,
+    google_drive_id character varying,
+    name character varying,
     data jsonb,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: user_auths; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_auths (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    user_id uuid NOT NULL,
+    provider integer NOT NULL,
+    data jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    email character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -101,10 +130,33 @@ ALTER TABLE ONLY public.torrent_files
 
 
 --
--- Name: index_torrent_files_on_transmission_id; Type: INDEX; Schema: public; Owner: -
+-- Name: user_auths user_auths_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_torrent_files_on_transmission_id ON public.torrent_files USING btree (transmission_id);
+ALTER TABLE ONLY public.user_auths
+    ADD CONSTRAINT user_auths_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_torrent_files_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_torrent_files_on_user_id ON public.torrent_files USING btree (user_id);
+
+
+--
+-- Name: index_user_auths_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_user_auths_on_user_id ON public.user_auths USING btree (user_id);
 
 
 --
@@ -115,6 +167,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20190605213344'),
-('20190605213345');
+('20190605213350'),
+('20190605213352'),
+('20190605213355');
 
 

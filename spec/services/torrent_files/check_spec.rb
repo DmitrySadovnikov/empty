@@ -10,6 +10,6 @@ describe TorrentFiles::Check do
   end
 
   it 'changes torrent_file status' do
-    expect { subject }.to change { torrent_file.reload.status }.to('done')
+    expect { subject }.to change { torrent_file.reload.status }.to('downloaded')
   end
 end
