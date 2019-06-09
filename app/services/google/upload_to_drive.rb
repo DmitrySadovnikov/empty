@@ -1,9 +1,9 @@
-module GoogleDrive
-  class Upload < ApplicationService
+module Google
+  class UploadToDrive < ApplicationService
     option :file_name
     option :file_path
     option :credentials
-    option :drive_service, default: -> { Google::Apis::DriveV3::DriveService.new }
+    option :drive_service, default: -> { Apis::DriveV3::DriveService.new }
     option :application_name, default: -> { 'Empty' }
 
     def call
@@ -21,7 +21,7 @@ module GoogleDrive
     private
 
     def web_view_link(file_id)
-      permission = Google::Apis::DriveV3::Permission.new(type: :anyone, role: :reader)
+      permission = Apis::DriveV3::Permission.new(type: :anyone, role: :reader)
       drive_service.create_permission(file_id, permission)
       drive_service.get_file(file_id, fields: 'web_view_link').web_view_link
     end
@@ -32,10 +32,10 @@ module GoogleDrive
     end
 
     def authorization
-      @authorization ||= Google::Auth::UserRefreshCredentials.new(
-        client_id: ENV['GOOGLE_KEY'],
+      @authorization ||= Auth::UserRefreshCredentials.new(
+        client_id: ENV['GOOGLE_CLIENT_ID'],
         client_secret: ENV['GOOGLE_SECRET'],
-        scope: Google::Apis::DriveV3::AUTH_DRIVE_FILE,
+        scope: Apis::DriveV3::AUTH_DRIVE_FILE,
         access_token: credentials['token'],
         refresh_token: credentials['refresh_token'],
         expiration_time_millis: credentials['expires_at']

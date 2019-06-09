@@ -16,7 +16,7 @@
         immediate: true,
         response_type: 'code',
         cookie_policy: 'single_host_origin',
-        client_id: "<%= ENV['GOOGLE_KEY'] %>",
+        client_id: "<%= ENV['GOOGLE_CLIENT_ID'] %>",
         scope: 'email profile drive.file'
       }, function(response) {
         return;
@@ -27,7 +27,7 @@
           immediate: false,
           response_type: 'code',
           cookie_policy: 'single_host_origin',
-          client_id: "<%= ENV['GOOGLE_KEY'] %>",
+          client_id: "<%= ENV['GOOGLE_CLIENT_ID'] %>",
           scope: 'email profile drive.file'
         }, function(response) {
           if(response && !response.error) {
