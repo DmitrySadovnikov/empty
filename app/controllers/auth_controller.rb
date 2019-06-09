@@ -1,6 +1,6 @@
 class AuthController < ApplicationController
   get '/auth' do
-    erb :auth
+    erb :'auth/index'
   end
 
   post '/auth/:provider/callback' do
@@ -15,8 +15,6 @@ class AuthController < ApplicationController
 
   def process_callback
     Users::Create.call(request.env['omniauth.auth'])
-    # content_type 'application/json'
-    # request.env['omniauth.auth'].to_json
-    redirect '/torrent_files/new'
+    redirect '/torrent_entities/new'
   end
 end

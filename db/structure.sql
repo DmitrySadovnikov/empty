@@ -62,17 +62,18 @@ CREATE TABLE public.schema_migrations (
 
 
 --
--- Name: torrent_files; Type: TABLE; Schema: public; Owner: -
+-- Name: torrent_entities; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.torrent_files (
+CREATE TABLE public.torrent_entities (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     user_id uuid NOT NULL,
     magnet_link character varying NOT NULL,
     status integer NOT NULL,
+    name character varying,
     transmission_id integer,
     google_drive_id character varying,
-    name character varying,
+    google_drive_view_link character varying,
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -122,11 +123,11 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: torrent_files torrent_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: torrent_entities torrent_entities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.torrent_files
-    ADD CONSTRAINT torrent_files_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.torrent_entities
+    ADD CONSTRAINT torrent_entities_pkey PRIMARY KEY (id);
 
 
 --
@@ -146,10 +147,10 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: index_torrent_files_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_torrent_entities_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_torrent_files_on_user_id ON public.torrent_files USING btree (user_id);
+CREATE INDEX index_torrent_entities_on_user_id ON public.torrent_entities USING btree (user_id);
 
 
 --
