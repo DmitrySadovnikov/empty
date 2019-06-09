@@ -1,4 +1,8 @@
 class TorrentFilesController < ApplicationController
+  get '/torrent_files' do
+    erb :'torrent_files/index', {}, torrent_files: current_user.torrent_files
+  end
+
   get '/torrent_files/new' do
     erb :'torrent_files/new'
   end
