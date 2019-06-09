@@ -61,3 +61,6 @@ RSpec/MessageChain:
 
 RSpec/ExpectChange:
   EnforcedStyle: block
+
+RSpec/VerifiedDoubles:
+  Enabled: false

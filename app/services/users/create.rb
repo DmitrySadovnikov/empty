@@ -5,10 +5,16 @@ module Users
     option :email, default: -> { data[:info]['email'] }
 
     def call
-      return [:ok, auth.user] if auth
+      result =
+        if auth
+          auth.update!(data: data)
+          auth.user
+        else
+          UserAuth.create!(user: user, provider: provider, data: data)
+          user
+        end
 
-      UserAuth.create!(user: user, provider: provider, data: data)
-      [:ok, user]
+      [:ok, result]
     end
 
     private

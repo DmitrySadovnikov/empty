@@ -73,7 +73,7 @@ CREATE TABLE public.torrent_files (
     transmission_id integer,
     google_drive_id character varying,
     name character varying,
-    data jsonb,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );

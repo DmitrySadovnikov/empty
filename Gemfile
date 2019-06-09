@@ -27,11 +27,12 @@ group :development, :test do
   gem 'rubocop'
   gem 'rubocop-rspec'
   gem 'rubocop-performance'
-  gem 'rspec_junit_formatter'
 end
 
 group :test do
   gem 'rspec'
+  gem 'rspec-sidekiq'
+  gem 'rspec_junit_formatter'
   gem 'factory_bot'
   gem 'faker'
   gem 'simplecov'
