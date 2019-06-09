@@ -1,6 +1,6 @@
 require_relative '../../spec_helper'
 
-describe TorrentFiles::Download do
+describe TorrentEntities::Download do
   subject { described_class.call(user, magnet_link) }
 
   let(:user) { create(:user) }
@@ -10,24 +10,24 @@ describe TorrentFiles::Download do
     stub_transmission_rpc_request(id: 1)
   end
 
-  it 'creates TorrentFile' do
-    expect { subject }.to change { TorrentFile.count }.by(1)
+  it 'creates TorrentEntity' do
+    expect { subject }.to change { TorrentEntity.count }.by(1)
   end
 
-  it 'creates TorrentFile with correct attributes' do
+  it 'creates TorrentEntity with correct attributes' do
     subject
-    expect(TorrentFile.last).to have_attributes(transmission_id: 1)
+    expect(TorrentEntity.last).to have_attributes(transmission_id: 1)
   end
 
   it 'returns correct result' do
-    expect(subject).to eq([:ok, TorrentFile.last])
+    expect(subject).to eq([:ok, TorrentEntity.last])
   end
 
   context 'with invalid magnet_link ' do
     let(:magnet_link) { SecureRandom.uuid }
 
     it 'returns correct result' do
-      expect(subject).to match_array([:invalid, kind_of(TorrentFile)])
+      expect(subject).to match_array([:invalid, kind_of(TorrentEntity)])
     end
   end
 end

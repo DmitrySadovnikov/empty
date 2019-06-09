@@ -1,30 +1,30 @@
-module TorrentFiles
+module TorrentEntities
   class Upload < ApplicationService
     APPLICATION_NAME = 'Empty'.freeze
 
-    param :torrent_file
+    param :torrent_entity
     option :drive_service, default: -> { Google::Apis::DriveV3::DriveService.new }
     option :upload_source,
-           default: -> { [ENV['TRANSMISSION_DOWNLOAD_DIR'], torrent_file.name].join('/') }
+           default: -> { [ENV['TRANSMISSION_DOWNLOAD_DIR'], torrent_entity.name].join('/') }
 
     def call
-      torrent_file.status_uploading!
+      torrent_entity.status_uploading!
       drive_service.client_options.application_name = APPLICATION_NAME
       drive_service.authorization = authorization
       uploaded_file = upload_file
 
       ActiveRecord::Base.transaction do
-        torrent_file.update!(google_drive_id: uploaded_file.id)
-        torrent_file.status_uploaded!
+        torrent_entity.update!(google_drive_id: uploaded_file.id)
+        torrent_entity.status_uploaded!
       end
 
-      [:ok, torrent_file]
+      [:ok, torrent_entity]
     end
 
     private
 
     def upload_file
-      file_metadata = { name: torrent_file.name }
+      file_metadata = { name: torrent_entity.name }
       drive_service.create_file(file_metadata, upload_source: upload_source)
     end
 
@@ -41,7 +41,7 @@ module TorrentFiles
 
     def user_auth
       @user_auth ||=
-        torrent_file.user.auths.provider_google_oauth2.order(:created_at).last
+        torrent_entity.user.auths.provider_google_oauth2.order(:created_at).last
     end
   end
 end

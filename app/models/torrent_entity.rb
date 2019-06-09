@@ -1,4 +1,4 @@
-class TorrentFile < ApplicationRecord
+class TorrentEntity < ApplicationRecord
   include AASM
 
   belongs_to :user
