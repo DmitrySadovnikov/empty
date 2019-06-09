@@ -4,17 +4,20 @@ module TorrentEntities
 
     param :torrent_entity
     option :drive_service, default: -> { Google::Apis::DriveV3::DriveService.new }
-    option :upload_source,
+    option :file_path,
            default: -> { [ENV['TRANSMISSION_DOWNLOAD_DIR'], torrent_entity.name].join('/') }
 
     def call
       torrent_entity.status_uploading!
-      drive_service.client_options.application_name = APPLICATION_NAME
-      drive_service.authorization = authorization
-      uploaded_file = upload_file
+      _, file_data = GoogleDrive::Upload.call(
+        file_name: torrent_entity.name,
+        file_path: file_path,
+        credentials: user_auth.data['credentials']
+      )
 
       ActiveRecord::Base.transaction do
-        torrent_entity.update!(google_drive_id: uploaded_file.id)
+        torrent_entity.update!(google_drive_id: file_data[:id],
+                               google_drive_view_link: file_data[:web_view_link])
         torrent_entity.status_uploaded!
       end
 
@@ -22,22 +25,6 @@ module TorrentEntities
     end
 
     private
-
-    def upload_file
-      file_metadata = { name: torrent_entity.name }
-      drive_service.create_file(file_metadata, upload_source: upload_source)
-    end
-
-    def authorization
-      @authorization ||= Google::Auth::UserRefreshCredentials.new(
-        client_id: ENV['GOOGLE_KEY'],
-        client_secret: ENV['GOOGLE_SECRET'],
-        scope: Google::Apis::DriveV3::AUTH_DRIVE_FILE,
-        access_token: user_auth.data['credentials']['token'],
-        refresh_token: user_auth.data['credentials']['refresh_token'],
-        expiration_time_millis: user_auth.data['credentials']['expires_at']
-      )
-    end
 
     def user_auth
       @user_auth ||=

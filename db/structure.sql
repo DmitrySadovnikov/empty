@@ -70,9 +70,10 @@ CREATE TABLE public.torrent_entities (
     user_id uuid NOT NULL,
     magnet_link character varying NOT NULL,
     status integer NOT NULL,
+    name character varying,
     transmission_id integer,
     google_drive_id character varying,
-    name character varying,
+    google_drive_view_link character varying,
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
