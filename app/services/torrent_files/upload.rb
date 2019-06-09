@@ -8,6 +8,7 @@ module TorrentFiles
            default: -> { [ENV['TRANSMISSION_DOWNLOAD_DIR'], torrent_file.name].join('/') }
 
     def call
+      torrent_file.status_uploading!
       drive_service.client_options.application_name = APPLICATION_NAME
       drive_service.authorization = authorization
       uploaded_file = upload_file

@@ -7,7 +7,7 @@ class CreateTorrentFiles < ActiveRecord::Migration[5.2]
       t.integer :transmission_id, unique: true
       t.string :google_drive_id, unique: true
       t.string :name
-      t.jsonb :data
+      t.jsonb :data, null: false, default: {}
       t.timestamps
     end
   end

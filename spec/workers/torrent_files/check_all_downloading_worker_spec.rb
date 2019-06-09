@@ -1,9 +1,9 @@
 require_relative '../../spec_helper'
 
-describe TorrentFiles::CheckPendingWorker do
+describe TorrentFiles::CheckAllDownloadingWorker do
   subject { described_class.new.perform }
 
-  let!(:torrent_file) { create(:torrent_file, status: :pending) }
+  let!(:torrent_file) { create(:torrent_file, status: :downloading) }
 
   before do
     stub_transmission_rpc_request
@@ -12,7 +12,7 @@ describe TorrentFiles::CheckPendingWorker do
   it_behaves_like 'should present at the cron schedule'
 
   it 'calls TorrentFiles::Check' do
-    expect(TorrentFiles::Check).to receive(:call)
+    expect(TorrentFiles::CheckDownloading).to receive(:call)
     subject
   end
 

@@ -11,4 +11,5 @@ class App < Sinatra::Base
   end
   use ApplicationController
   use AuthController
+  use TorrentFilesController
 end

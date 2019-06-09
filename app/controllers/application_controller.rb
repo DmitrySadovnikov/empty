@@ -7,4 +7,10 @@ class ApplicationController < Sinatra::Base
   get '/' do
     erb :welcome
   end
+
+  private
+
+  def current_user
+    @current_user ||= User.first
+  end
 end
