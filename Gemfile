@@ -21,6 +21,7 @@ gem 'sidekiq-cron'
 gem 'aasm'
 gem 'omniauth-google-oauth2'
 gem 'google-api-client'
+gem 'reverse_markdown'
 
 group :development, :test do
   gem 'dotenv'

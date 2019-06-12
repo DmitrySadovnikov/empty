@@ -4,7 +4,7 @@ class TorrentEntity < ApplicationRecord
   belongs_to :user
 
   validates :user, presence: true
-  validates :magnet_link, format: { with: /magnet:\?xt=urn:btih:[a-zA-Z0-9]*/ }
+  validates :magnet_link, format: { with: MAGNET_LINK_REGEX }
 
   enum status: {
     downloading: 1,
