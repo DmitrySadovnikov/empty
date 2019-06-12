@@ -11,6 +11,8 @@ module Trackers
         clean_post
 
         result = {
+          id: id,
+          link: "https://rutracker.org/forum/viewtopic.php?t=#{id}",
           image_url: image_url,
           magnet_link: magnet_link,
           text: ReverseMarkdown.convert(post)

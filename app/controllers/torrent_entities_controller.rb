@@ -18,6 +18,6 @@ class TorrentEntitiesController < ApplicationController
 
   post '/torrent_entities/search' do
     content_type 'application/json'
-    Trackers::Rutracker::Search.call(params[:search]).to_json
+    { data: Trackers::Rutracker::Search.call(params[:search]).last }.to_json
   end
 end
