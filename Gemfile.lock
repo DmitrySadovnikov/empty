@@ -132,6 +132,8 @@ GEM
       uber (< 0.2.0)
     require_all (2.0.0)
     retriable (3.1.2)
+    reverse_markdown (1.1.0)
+      nokogiri
     ripl (0.7.1)
       bond (~> 0.5.1)
     ripl-multi_line (0.3.1)
@@ -249,6 +251,7 @@ DEPENDENCIES
   rake
   redis
   require_all
+  reverse_markdown
   rspec
   rspec-sidekiq
   rspec_junit_formatter

@@ -7,8 +7,17 @@ class TorrentEntitiesController < ApplicationController
     erb :'torrent_entities/new'
   end
 
+  get '/torrent_entities/search' do
+    erb :'torrent_entities/search'
+  end
+
   post '/torrent_entities' do
     TorrentEntities::Download.call(current_user, params[:magnet_link])
     redirect '/torrent_entities'
+  end
+
+  post '/torrent_entities/search' do
+    content_type 'application/json'
+    Trackers::Rutracker::Search.call(params[:search]).to_json
   end
 end
