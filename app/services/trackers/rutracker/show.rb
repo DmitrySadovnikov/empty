@@ -15,7 +15,7 @@ module Trackers
           link: "https://rutracker.org/forum/viewtopic.php?t=#{id}",
           image_url: image_url,
           magnet_link: magnet_link,
-          text: ReverseMarkdown.convert(post).strip
+          text: text.gsub('** :', '**:').strip
         }
         [:ok, result]
       end
@@ -37,6 +37,10 @@ module Trackers
           page = Nokogiri::HTML(response.body.force_encoding('windows-1251').encode('utf-8'))
           page.css('.post_wrap').first
         end
+      end
+
+      def text
+        @text ||= ReverseMarkdown.convert(post)
       end
 
       def select_image_url
