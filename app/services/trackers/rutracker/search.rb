@@ -13,7 +13,10 @@ module Trackers
       private
 
       def list
-        @list ||= Nokogiri::HTML(response.body).css('.tLink')
+        @list ||= begin
+          page = Nokogiri::HTML(response.body.force_encoding('windows-1251').encode('utf-8'))
+          page.css('.tLink')
+        end
       end
 
       def ids

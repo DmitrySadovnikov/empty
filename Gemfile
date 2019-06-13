@@ -22,6 +22,7 @@ gem 'aasm'
 gem 'omniauth-google-oauth2'
 gem 'google-api-client'
 gem 'reverse_markdown'
+gem 'tram-page'
 
 group :development, :test do
   gem 'dotenv'
