@@ -14,7 +14,11 @@
       <td><%= torrent_entity.id %></td>
       <td><%= torrent_entity.name %></td>
       <td><%= torrent_entity.status %></td>
-      <td><a href="<%= torrent_entity.google_drive_view_link %>">link</a></td>
+      <td>
+        <% if torrent_entity.google_drive_view_link %>
+          <a href="<%= torrent_entity.google_drive_view_link %>">link</a>
+        <% end %>
+      </td>
       <td><%= torrent_entity.created_at %></td>
     </tr>
   <% end %>
