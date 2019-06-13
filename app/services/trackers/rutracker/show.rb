@@ -55,6 +55,8 @@ module Trackers
       end
 
       def clean_post # rubocop:disable Metrics/AbcSize
+        post.css('.post-u').each { |el| el.name = 'u' }
+        post.css('.post-i').each { |el| el.name = 'i' }
         post.css('.post-b').each { |el| el.name = 'b' }
         post.css('span').first.name = 'h1'
         post.css('br').first.remove
