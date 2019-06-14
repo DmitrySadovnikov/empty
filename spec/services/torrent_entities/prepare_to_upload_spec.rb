@@ -1,20 +1,11 @@
 require_relative '../../spec_helper'
 
-describe TorrentEntities::Upload do
+describe TorrentEntities::PrepareToUpload do
   subject { described_class.call(torrent_entity) }
 
   let(:user) { create(:user, :with_auth) }
   let(:torrent_entity) do
     create(:torrent_entity, user: user, status: :downloaded, name: 'test.pdf')
-  end
-
-  before do
-    allow_any_instance_of(Google::Apis::DriveV3::DriveService)
-      .to receive(:create_file).and_return(double(id: 1))
-    allow_any_instance_of(Google::Apis::DriveV3::DriveService)
-      .to receive(:create_permission).and_return(double(id: 1))
-    allow_any_instance_of(Google::Apis::DriveV3::DriveService)
-      .to receive(:get_file).and_return(double(web_view_link: 'http://example.com'))
   end
 
   shared_examples 'common cases' do
@@ -71,7 +62,7 @@ describe TorrentEntities::Upload do
 
     before do
       allow(Google::UploadToDrive).to receive(:call)
-        .and_raise(Google::Apis::AuthorizationError, :error)
+                                        .and_raise(Google::Apis::AuthorizationError, :error)
       allow_any_instance_of(OAuth2::AccessToken)
         .to receive(:refresh!).and_return(new_token_object)
     end

@@ -1,8 +1,8 @@
 require './spec/spec_helper'
 
-describe Web::V1::TorrentEntitiesController do
-  describe 'GET /web/v1/torrent_entities' do
-    subject { get '/web/v1/torrent_entities' }
+describe Web::V1::TransfersController do
+  describe 'GET /web/v1/transfers' do
+    subject { get '/web/v1/transfers' }
 
     let(:user) { create(:user) }
     let!(:torrent_entity) { create(:torrent_entity, user: user) }
@@ -32,15 +32,15 @@ describe Web::V1::TorrentEntitiesController do
         id: torrent_entity.id,
         name: torrent_entity.name,
         status: torrent_entity.status,
-        google_drive_view_link: torrent_entity.google_drive_view_link,
+        cloud_file_url: torrent_entity.cloud_file_url,
         created_at: torrent_entity.created_at
       }.as_json
       expect(JSON.parse(last_response.body)['data'][0]).to eq(expectation)
     end
   end
 
-  describe 'POST /web/v1/torrent_entities' do
-    subject { post '/web/v1/torrent_entities', params }
+  describe 'POST /web/v1/transfers' do
+    subject { post '/web/v1/transfers', params }
 
     let(:user) { create(:user) }
     let(:created_torrent_entity) { TorrentEntity.last }
@@ -79,7 +79,7 @@ describe Web::V1::TorrentEntitiesController do
         id: created_torrent_entity.id,
         name: created_torrent_entity.name,
         status: created_torrent_entity.status,
-        google_drive_view_link: created_torrent_entity.google_drive_view_link,
+        cloud_file_url: created_torrent_entity.cloud_file_url,
         created_at: created_torrent_entity.created_at
       }.as_json
       expect(JSON.parse(last_response.body)).to eq(expectation)

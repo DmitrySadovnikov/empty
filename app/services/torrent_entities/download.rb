@@ -1,6 +1,6 @@
 module TorrentEntities
   class Download < ApplicationService
-    param :user
+    param :transfer
     param :magnet_link
 
     def call
@@ -9,6 +9,7 @@ module TorrentEntities
       torrent = Transmission::Model::Torrent.add arguments: { filename: magnet_link }
       torrent_entity.transmission_id = torrent.id
       torrent_entity.save!
+      transfer.status_downloading!
       [:ok, torrent_entity]
     end
 
@@ -16,7 +17,7 @@ module TorrentEntities
 
     def torrent_entity
       @torrent_entity ||= TorrentEntity.new(
-        user: user,
+        transfer: transfer,
         magnet_link: magnet_link,
         status: :downloading
       )

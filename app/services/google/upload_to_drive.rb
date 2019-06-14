@@ -10,17 +10,13 @@ module Google
       drive_service.client_options.application_name = application_name
       drive_service.authorization = authorization
       file = upload_file
-      link = web_view_link(file.id)
-      result = {
-        id: file.id,
-        web_view_link: link
-      }
+      result = { id: file.id, url: cloud_file_url(file.id) }
       [:ok, result]
     end
 
     private
 
-    def web_view_link(file_id)
+    def cloud_file_url(file_id)
       permission = Apis::DriveV3::Permission.new(type: :anyone, role: :reader)
       drive_service.create_permission(file_id, permission)
       drive_service.get_file(file_id, fields: 'web_view_link').web_view_link

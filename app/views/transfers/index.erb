@@ -1,0 +1,25 @@
+<table border="1">
+  <thead>
+  <tr>
+    <th>id</th>
+    <th>name</th>
+    <th>status</th>
+    <th>cloud_file_url</th>
+    <th>created_at</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% transfers.each do |transfer| %>
+    <tr>
+      <td><%= transfer.id %></td>
+      <td><%= transfer.torrent_entity.name %></td>
+      <td><%= transfer.status %></td>
+      <td>
+        <% url = transfer.cloud_entities.order(:created_at).first&.cloud_file_url %>
+        <a href="<%= url %>">link</a>
+      </td>
+      <td><%= transfer.created_at %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

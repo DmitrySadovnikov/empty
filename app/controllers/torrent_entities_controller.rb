@@ -1,18 +1,18 @@
 class TorrentEntitiesController < ApplicationController
   get '/torrent_entities' do
-    erb :'torrent_entities/index', {}, torrent_entities: current_user.torrent_entities
+    erb :'transfers/index', {}, transfers: current_user.transfers
   end
 
   get '/torrent_entities/new' do
-    erb :'torrent_entities/new'
+    erb :'transfers/new'
   end
 
   get '/torrent_entities/search' do
-    erb :'torrent_entities/search'
+    erb :'transfers/search'
   end
 
   post '/torrent_entities' do
-    TorrentEntities::Download.call(current_user, params[:magnet_link])
+    Transfers::Create.call(current_user, params)
     redirect '/torrent_entities'
   end
 

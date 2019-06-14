@@ -12,6 +12,6 @@ class App < Sinatra::Base
   use ApplicationController
   use AuthController
   use TorrentEntitiesController
-  use Web::V1::TorrentEntitiesController
+  use Web::V1::TransfersController
   use Web::V1::TrackersController
 end
