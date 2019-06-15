@@ -1,22 +1,22 @@
-class TorrentEntitiesController < ApplicationController
-  get '/torrent_entities' do
+class TransfersController < ApplicationController
+  get '/transfers' do
     erb :'transfers/index', {}, transfers: current_user.transfers
   end
 
-  get '/torrent_entities/new' do
+  get '/transfers/new' do
     erb :'transfers/new'
   end
 
-  get '/torrent_entities/search' do
+  get '/transfers/search' do
     erb :'transfers/search'
   end
 
-  post '/torrent_entities' do
+  post '/transfers' do
     Transfers::Create.call(current_user, params)
-    redirect '/torrent_entities'
+    redirect '/transfers'
   end
 
-  post '/torrent_entities/search' do
+  post '/transfers/search' do
     content_type 'application/json'
     { data: Trackers::Rutracker::Search.call(params[:search]).last }.to_json
   end

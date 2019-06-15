@@ -10,10 +10,12 @@ module CloudEntities
 
     def call
       cloud_entity.status_uploading!
-      _, file_data = upload_to_google_drive
+      _, file_data = try_upload_to_google_drive
 
       ActiveRecord::Base.transaction do
-        cloud_entity.update!(cloud_file_id: file_data[:id], cloud_file_url: file_data[:url])
+        cloud_entity.update!(cloud_file_id: file_data[:id],
+                             cloud_file_url: file_data[:url],
+                             mime_type: file_data[:mime_type])
         cloud_entity.status_uploaded!
       end
 
@@ -33,7 +35,8 @@ module CloudEntities
 
     def upload_to_google_drive
       Google::UploadToDrive.call(
-        parents: [cloud_entity.parent],
+        parents: [cloud_entity.parent&.cloud_file_id].compact,
+        mime_type: cloud_entity.mime_type,
         file_name: File.basename(cloud_entity.file_path),
         file_path: cloud_entity.file_path,
         credentials: user_auth.reload.data['credentials']

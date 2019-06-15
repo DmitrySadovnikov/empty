@@ -1,8 +1,8 @@
 require_relative '../spec_helper'
 
-describe TorrentEntitiesController do
-  describe 'GET /torrent_entities' do
-    subject { get '/torrent_entities' }
+describe TransfersController do
+  describe 'GET /transfers' do
+    subject { get '/transfers' }
 
     let!(:torrent_entity) { create(:torrent_entity) }
 

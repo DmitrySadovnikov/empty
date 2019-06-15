@@ -15,6 +15,6 @@ class AuthController < ApplicationController
 
   def process_callback
     Users::Create.call(request.env['omniauth.auth'])
-    redirect '/torrent_entities/new'
+    redirect '/transfers/new'
   end
 end

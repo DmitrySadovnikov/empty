@@ -1,8 +1,9 @@
 module Transfers
   class PrepareToUpload < ApplicationService
     param :transfer
+    option :torrent_entity, default: -> { transfer.torrent_entity }
     option :download_path,
-           default: -> { [ENV['TRANSMISSION_DOWNLOAD_DIR'], transfer.torrent_entity.name].join('/') }
+           default: -> { [ENV['TRANSMISSION_DOWNLOAD_DIR'], torrent_entity.name].join('/') }
 
     def call
       ActiveRecord::Base.transaction do
@@ -20,8 +21,8 @@ module Transfers
       if File.file?(path)
         create_cloud_entity(path, parent: parent)
       elsif File.directory?(path)
-        parent = create_cloud_entity(path, mime_type: CloudEntity::MIME_TYPE_FOLDER)
-        Dir["#{path}/*"].each { |sub_path| create_cloud_entities(sub_path, parent: parent) }
+        folder = create_cloud_entity(path, mime_type: Google::MIME_TYPE_FOLDER, parent: parent)
+        Dir["#{path}/*"].each { |sub_path| create_cloud_entities(sub_path, parent: folder) }
       else
         raise "invalid path #{path}"
       end

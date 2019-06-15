@@ -1,14 +1,13 @@
 class CloudEntity < ApplicationRecord
-  MIME_TYPE_FOLDER = 'application/vnd.google-apps.folder'.freeze
   include AASM
 
   belongs_to :transfer
-  belongs_to :parent, class_name: 'CloudEntity', optional: true, primary_key: :parent_id
+  belongs_to :parent, class_name: 'CloudEntity', optional: true, foreign_key: :parent_id
   has_many :children, class_name: 'CloudEntity', foreign_key: :parent_id
 
   validates :transfer, presence: true
 
-  scope :kind_folder, -> { where(mime_type: MIME_TYPE_FOLDER) }
+  scope :kind_folder, -> { where(mime_type: Google::MIME_TYPE_FOLDER) }
   scope :kind_file, -> { where.not(id: CloudEntity.kind_folder.select(:id)) }
 
   enum status: {

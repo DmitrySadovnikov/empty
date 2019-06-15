@@ -59,7 +59,7 @@ CREATE TABLE public.ar_internal_metadata (
 CREATE TABLE public.cloud_entities (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     transfer_id uuid NOT NULL,
-    parent_id bigint,
+    parent_id uuid,
     status integer NOT NULL,
     file_path character varying NOT NULL,
     cloud_file_id character varying,

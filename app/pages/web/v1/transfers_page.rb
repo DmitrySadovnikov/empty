@@ -11,7 +11,8 @@ module Web
       private
 
       def relation
-        @relation ||= user.transfers.order(:created_at)
+        @relation ||=
+          user.transfers.includes(:torrent_entity, :cloud_entities).order(:created_at)
       end
     end
   end
