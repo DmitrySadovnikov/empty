@@ -20,6 +20,7 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.include Rack::Test::Methods
   config.include Capybara::DSL
+  config.include Gen
   config.include SidekiqHelper
   config.include TransmissionHelper
   config.include FactoryBot::Syntax::Methods

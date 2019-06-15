@@ -1,10 +1,10 @@
 require_relative '../../spec_helper'
 
 describe TorrentEntities::Download do
-  subject { described_class.call(user, magnet_link) }
+  subject { described_class.call(transfer, magnet_link) }
 
-  let(:user) { create(:user) }
-  let(:magnet_link) { 'magnet:?xt=urn:btih:14ea8deecc33e2750f9c9b0eab70f409f4c362e4' }
+  let(:transfer) { create(:transfer) }
+  let(:magnet_link) { Gen.random_magnet_link }
 
   before do
     stub_transmission_rpc_request(id: 1)

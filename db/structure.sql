@@ -53,6 +53,25 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: cloud_entities; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cloud_entities (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    transfer_id uuid NOT NULL,
+    parent_id uuid,
+    status integer NOT NULL,
+    file_path character varying NOT NULL,
+    cloud_file_id character varying,
+    cloud_file_url character varying,
+    mime_type character varying,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -67,13 +86,25 @@ CREATE TABLE public.schema_migrations (
 
 CREATE TABLE public.torrent_entities (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    user_id uuid NOT NULL,
-    magnet_link character varying NOT NULL,
-    status integer NOT NULL,
-    name character varying,
+    transfer_id uuid NOT NULL,
     transmission_id integer,
-    google_drive_id character varying,
-    google_drive_view_link character varying,
+    status integer NOT NULL,
+    magnet_link character varying NOT NULL,
+    name character varying,
+    data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: transfers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.transfers (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    user_id uuid NOT NULL,
+    status integer NOT NULL,
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -115,6 +146,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: cloud_entities cloud_entities_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cloud_entities
+    ADD CONSTRAINT cloud_entities_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -128,6 +167,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 ALTER TABLE ONLY public.torrent_entities
     ADD CONSTRAINT torrent_entities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: transfers transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transfers
+    ADD CONSTRAINT transfers_pkey PRIMARY KEY (id);
 
 
 --
@@ -147,10 +194,31 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: index_torrent_entities_on_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_cloud_entities_on_parent_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_torrent_entities_on_user_id ON public.torrent_entities USING btree (user_id);
+CREATE INDEX index_cloud_entities_on_parent_id ON public.cloud_entities USING btree (parent_id);
+
+
+--
+-- Name: index_cloud_entities_on_transfer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cloud_entities_on_transfer_id ON public.cloud_entities USING btree (transfer_id);
+
+
+--
+-- Name: index_torrent_entities_on_transfer_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_torrent_entities_on_transfer_id ON public.torrent_entities USING btree (transfer_id);
+
+
+--
+-- Name: index_transfers_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_transfers_on_user_id ON public.transfers USING btree (user_id);
 
 
 --
@@ -158,6 +226,38 @@ CREATE INDEX index_torrent_entities_on_user_id ON public.torrent_entities USING 
 --
 
 CREATE INDEX index_user_auths_on_user_id ON public.user_auths USING btree (user_id);
+
+
+--
+-- Name: transfers fk_rails_344b52b7fd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.transfers
+    ADD CONSTRAINT fk_rails_344b52b7fd FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: torrent_entities fk_rails_34e7d93807; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.torrent_entities
+    ADD CONSTRAINT fk_rails_34e7d93807 FOREIGN KEY (transfer_id) REFERENCES public.transfers(id);
+
+
+--
+-- Name: cloud_entities fk_rails_3904d1a86c; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cloud_entities
+    ADD CONSTRAINT fk_rails_3904d1a86c FOREIGN KEY (transfer_id) REFERENCES public.transfers(id);
+
+
+--
+-- Name: user_auths fk_rails_6eeab874aa; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_auths
+    ADD CONSTRAINT fk_rails_6eeab874aa FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -170,6 +270,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190605213344'),
 ('20190605213350'),
 ('20190605213352'),
-('20190605213355');
+('20190605213353'),
+('20190605213355'),
+('20190614085747');
 
 

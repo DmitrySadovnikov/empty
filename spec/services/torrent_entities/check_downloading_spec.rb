@@ -19,6 +19,7 @@ describe TorrentEntities::CheckDownloading do
 
   it 'calls TorrentEntities::UploadWorker' do
     subject
-    expect(TorrentEntities::UploadWorker).to have_enqueued_sidekiq_job(torrent_entity.id)
+    expect(Transfers::PrepareToUploadWorker)
+      .to have_enqueued_sidekiq_job(torrent_entity.transfer.id)
   end
 end

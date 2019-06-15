@@ -1,12 +1,18 @@
-class TorrentEntity < ApplicationRecord
+class Transfer < ApplicationRecord
   include AASM
 
-  belongs_to :transfer
-  validates :magnet_link, format: { with: MAGNET_LINK_REGEX }
+  belongs_to :user
+  has_one :torrent_entity
+  has_many :cloud_entities
+
+  validates :user, presence: true
 
   enum status: {
     downloading: 1,
-    downloaded: 2
+    downloaded: 2,
+    prepared: 3,
+    uploading: 4,
+    uploaded: 5
   }, _prefix: :status
 
   aasm column: :status, enum: true do
@@ -14,8 +20,14 @@ class TorrentEntity < ApplicationRecord
 
     state :downloading, initial: true
     state :downloaded
+    state :prepared
+    state :uploading
+    state :uploaded
 
     event(:status_downloaded) { transitions from: :downloading, to: :downloaded }
+    event(:status_prepared) { transitions from: :downloaded, to: :prepared }
+    event(:status_uploading) { transitions from: :prepared, to: :uploading }
+    event(:status_uploaded) { transitions from: :uploading, to: :uploaded }
   end
 
   store_accessor :data,
