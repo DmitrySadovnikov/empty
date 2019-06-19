@@ -1,10 +1,10 @@
 module Web
   module V1
-    class TrackersPage < Tram::Page
+    class TrackerPostsPage < Tram::Page
       option :search
-      section :data
+      section :collection
 
-      def data
+      def collection
         Trackers::Rutracker::Search.call(search)[1]
       end
     end

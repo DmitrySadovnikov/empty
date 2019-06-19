@@ -6,7 +6,7 @@ module Trackers
       param :search
 
       def call
-        result = ids.map { |id| Show.call(id).last }.compact
+        result = tracker_post_ids.map { |id| Show.call(id).last }.compact
         [:ok, result]
       end
 
@@ -19,7 +19,7 @@ module Trackers
         end
       end
 
-      def ids
+      def tracker_post_ids
         list.map { |item| item.attributes['href'].value.scan(/t=(.\d*)/)[0][0] }
       end
 

@@ -32,7 +32,7 @@ describe Web::V1::TransfersController do
     it 'returns correct json' do
       subject
       expectation = {
-        data: [
+        collection: [
           {
             id: transfer.id,
             created_at: transfer.created_at,

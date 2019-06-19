@@ -2,9 +2,9 @@ module Web
   module V1
     class TransfersPage < Tram::Page
       param :user
-      section :data
+      section :collection
 
-      def data
+      def collection
         relation.map { |resource| TransferPage.new(resource).to_h }
       end
 

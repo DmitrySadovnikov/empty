@@ -23,6 +23,7 @@ gem 'omniauth-google-oauth2'
 gem 'google-api-client'
 gem 'reverse_markdown'
 gem 'tram-page'
+gem 'rack-cors', require: 'rack/cors'
 
 group :development, :test do
   gem 'dotenv'

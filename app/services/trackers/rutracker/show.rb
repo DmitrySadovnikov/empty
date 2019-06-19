@@ -1,7 +1,7 @@
 module Trackers
   module Rutracker
     class Show < ApplicationService
-      param :id
+      param :tracker_post_id
 
       def call
         return [:invalid, nil] unless post
@@ -11,8 +11,8 @@ module Trackers
         clean_post
 
         result = {
-          id: id,
-          link: "https://rutracker.org/forum/viewtopic.php?t=#{id}",
+          tracker_post_id: tracker_post_id,
+          link: "https://rutracker.org/forum/viewtopic.php?t=#{tracker_post_id}",
           image_url: image_url,
           magnet_link: magnet_link,
           text: text.gsub('** :', '**:').strip
@@ -24,7 +24,7 @@ module Trackers
 
       def response
         @response ||=
-          Curl.get('https://rutracker.org/forum/viewtopic.php', t: id) do |curl|
+          Curl.get('https://rutracker.org/forum/viewtopic.php', t: tracker_post_id) do |curl|
             curl.headers['Content-Type'] = 'application/html'
             curl.proxy_tunnel = true
             curl.proxy_url = ENV['PROXY_URL']
