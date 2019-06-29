@@ -12,7 +12,7 @@ module Web
 
       def relation
         @relation ||=
-          user.transfers.includes(:torrent_entity, :cloud_entities).order(:created_at)
+          user.transfers.includes(:torrent_entity, :cloud_entities).order(created_at: :desc)
       end
     end
   end
