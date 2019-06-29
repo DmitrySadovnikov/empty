@@ -11,8 +11,8 @@ module TorrentEntities
         ActiveRecord::Base.transaction do
           torrent_entity.status_downloaded!
           transfer.status_downloaded!
-          Transfers::PrepareToUploadWorker.perform_async(transfer.id)
         end
+        Transfers::PrepareToUploadWorker.perform_async(transfer.id)
       end
 
       [:ok, torrent_entity]

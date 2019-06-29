@@ -1,4 +1,4 @@
-module Trackers
+module Providers
   module Rutracker
     class Search < ApplicationService
       BOOK_FORMATS = %i[PDF EPUB MOBI IBA AZW AZW3].freeze
@@ -6,7 +6,24 @@ module Trackers
       param :search
 
       def call
-        result = ids.map { |id| Show.call(id).last }.compact
+        result = outer_ids.map do |id|
+          post = TorrentPost.provider_rutracker.find_by(outer_id: id)
+          next post if post
+
+          status, data = Post.call(id)
+          next if status != :ok
+
+          TorrentPost.create!(
+            provider: :rutracker,
+            outer_id: id,
+            magnet_link: data[:magnet_link],
+            image_url: data[:image_url],
+            title: data[:title],
+            body: data[:body],
+            torrent_size: data[:torrent_size]
+          )
+        end.compact
+
         [:ok, result]
       end
 
@@ -19,7 +36,7 @@ module Trackers
         end
       end
 
-      def ids
+      def outer_ids
         list.map { |item| item.attributes['href'].value.scan(/t=(.\d*)/)[0][0] }
       end
 

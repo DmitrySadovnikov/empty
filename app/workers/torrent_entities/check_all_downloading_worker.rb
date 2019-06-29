@@ -6,7 +6,7 @@ module TorrentEntities
 
     def perform
       TorrentEntity.status_downloading.find_each do |torrent_entity|
-        CheckDownloading.call(torrent_entity)
+        CheckDownloadingWorker.perform_async(torrent_entity.id)
       end
     end
   end

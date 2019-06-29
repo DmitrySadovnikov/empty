@@ -2,9 +2,9 @@ module Web
   module V1
     class TransfersPage < Tram::Page
       param :user
-      section :data
+      section :collection
 
-      def data
+      def collection
         relation.map { |resource| TransferPage.new(resource).to_h }
       end
 
@@ -12,7 +12,7 @@ module Web
 
       def relation
         @relation ||=
-          user.transfers.includes(:torrent_entity, :cloud_entities).order(:created_at)
+          user.transfers.includes(:torrent_entity, :cloud_entities).order(created_at: :desc)
       end
     end
   end

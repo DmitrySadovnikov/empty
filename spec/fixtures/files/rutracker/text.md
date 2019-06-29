@@ -1,4 +1,4 @@
-# Learning React
+Learning React  
 **Год издания**: 2017  
 **Автор**: Banks A., Porcello E.  
 **Издательство**: O'Reilly Media  

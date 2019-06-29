@@ -87,11 +87,29 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.torrent_entities (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     transfer_id uuid NOT NULL,
+    torrent_post_id uuid NOT NULL,
     transmission_id integer,
     status integer NOT NULL,
-    magnet_link character varying NOT NULL,
     name character varying,
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: torrent_posts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.torrent_posts (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    provider integer NOT NULL,
+    outer_id character varying NOT NULL,
+    magnet_link character varying NOT NULL,
+    title character varying NOT NULL,
+    body character varying NOT NULL,
+    image_url character varying,
+    torrent_size bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -170,6 +188,14 @@ ALTER TABLE ONLY public.torrent_entities
 
 
 --
+-- Name: torrent_posts torrent_posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.torrent_posts
+    ADD CONSTRAINT torrent_posts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: transfers transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -208,10 +234,24 @@ CREATE INDEX index_cloud_entities_on_transfer_id ON public.cloud_entities USING 
 
 
 --
+-- Name: index_torrent_entities_on_torrent_post_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_torrent_entities_on_torrent_post_id ON public.torrent_entities USING btree (torrent_post_id);
+
+
+--
 -- Name: index_torrent_entities_on_transfer_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_torrent_entities_on_transfer_id ON public.torrent_entities USING btree (transfer_id);
+
+
+--
+-- Name: index_torrent_posts_on_outer_id_and_provider; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_torrent_posts_on_outer_id_and_provider ON public.torrent_posts USING btree (outer_id, provider);
 
 
 --
@@ -253,6 +293,14 @@ ALTER TABLE ONLY public.cloud_entities
 
 
 --
+-- Name: torrent_entities fk_rails_6bb2f562f5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.torrent_entities
+    ADD CONSTRAINT fk_rails_6bb2f562f5 FOREIGN KEY (torrent_post_id) REFERENCES public.torrent_posts(id);
+
+
+--
 -- Name: user_auths fk_rails_6eeab874aa; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -271,7 +319,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190605213350'),
 ('20190605213352'),
 ('20190605213353'),
-('20190605213355'),
-('20190614085747');
+('20190614085747'),
+('20190623143710'),
+('20190623143720');
 
 
