@@ -4,7 +4,8 @@ describe Transfers::Create do
   subject { described_class.call(user, params) }
 
   let(:user) { create(:user) }
-  let(:params) { { magnet_link: Gen.random_magnet_link } }
+  let(:torrent_post) { create(:torrent_post) }
+  let(:params) { { torrent_post_id: torrent_post.id } }
 
   before do
     stub_transmission_rpc_request(id: 1)
@@ -30,7 +31,7 @@ describe Transfers::Create do
     subject
     expect(TorrentEntity.last).to have_attributes(
       transmission_id: 1,
-      magnet_link: params[:magnet_link],
+      torrent_post: torrent_post,
       status: 'downloading'
     )
   end

@@ -6,8 +6,11 @@ describe Web::V1::TransfersController do
 
     let(:user) { create(:user) }
     let(:transfer) { create(:transfer, user: user) }
-    let!(:torrent_entity) { create(:torrent_entity, transfer: transfer) }
+    let(:torrent_post) { create(:torrent_post, torrent_size: 3_460_300) }
     let!(:cloud_entity) { create(:cloud_entity, :kind_file, transfer: transfer) }
+    let!(:torrent_entity) do
+      create(:torrent_entity, transfer: transfer, torrent_post: torrent_post)
+    end
 
     before do
       allow_any_instance_of(described_class).to receive(:current_user).and_return(user)
@@ -35,12 +38,24 @@ describe Web::V1::TransfersController do
         collection: [
           {
             id: transfer.id,
+            status: transfer.status,
             created_at: transfer.created_at,
             torrent_entity: {
               id: torrent_entity.id,
               name: torrent_entity.name,
               status: torrent_entity.status,
               created_at: torrent_entity.created_at
+            },
+            torrent_post: {
+              id: torrent_post.id,
+              provider: torrent_post.provider,
+              outer_id: torrent_post.outer_id,
+              image_url: torrent_post.image_url,
+              magnet_link: torrent_post.magnet_link,
+              title: torrent_post.title,
+              body: torrent_post.body,
+              torrent_size: '3.3 MB',
+              link: "https://rutracker.org/forum/viewtopic.php?t=#{torrent_post.outer_id}"
             },
             cloud_entities: [
               {
@@ -58,12 +73,13 @@ describe Web::V1::TransfersController do
   end
 
   describe 'POST /web/v1/transfers' do
-    subject { post '/web/v1/transfers', params }
+    subject { post '/web/v1/transfers', params.to_json }
 
     let(:user) { create(:user) }
+    let(:torrent_post) { create(:torrent_post, torrent_size: 3_460_300) }
+    let!(:params) { { torrent_post_id: torrent_post.id } }
     let(:created_transfer) { Transfer.last }
     let(:created_torrent_entity) { TorrentEntity.last }
-    let!(:params) { { magnet_link: Gen.random_magnet_link } }
 
     before do
       allow_any_instance_of(described_class).to receive(:current_user).and_return(user)
@@ -83,12 +99,24 @@ describe Web::V1::TransfersController do
       subject
       expectation = {
         id: created_transfer.id,
+        status: created_transfer.status,
         created_at: created_transfer.created_at,
         torrent_entity: {
           id: created_torrent_entity.id,
-          name: nil,
-          status: 'downloading',
+          name: created_torrent_entity.name,
+          status: created_torrent_entity.status,
           created_at: created_torrent_entity.created_at
+        },
+        torrent_post: {
+          id: torrent_post.id,
+          provider: torrent_post.provider,
+          outer_id: torrent_post.outer_id,
+          image_url: torrent_post.image_url,
+          magnet_link: torrent_post.magnet_link,
+          title: torrent_post.title,
+          body: torrent_post.body,
+          torrent_size: '3.3 MB',
+          link: "https://rutracker.org/forum/viewtopic.php?t=#{torrent_post.outer_id}"
         },
         cloud_entities: []
       }.as_json

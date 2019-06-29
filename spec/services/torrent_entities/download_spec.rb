@@ -1,10 +1,10 @@
 require_relative '../../spec_helper'
 
 describe TorrentEntities::Download do
-  subject { described_class.call(transfer, magnet_link) }
+  subject { described_class.call(transfer, torrent_post) }
 
   let(:transfer) { create(:transfer) }
-  let(:magnet_link) { Gen.random_magnet_link }
+  let(:torrent_post) { create(:torrent_post) }
 
   before do
     stub_transmission_rpc_request(id: 1)
@@ -21,13 +21,5 @@ describe TorrentEntities::Download do
 
   it 'returns correct result' do
     expect(subject).to eq([:ok, TorrentEntity.last])
-  end
-
-  context 'with invalid magnet_link ' do
-    let(:magnet_link) { SecureRandom.uuid }
-
-    it 'returns correct result' do
-      expect(subject).to match_array([:invalid, kind_of(TorrentEntity)])
-    end
   end
 end

@@ -18,6 +18,6 @@ class TransfersController < ApplicationController
 
   post '/transfers/search' do
     content_type 'application/json'
-    { collection: Trackers::Rutracker::Search.call(params[:search]).last }.to_json
+    { collection: Providers::Rutracker::Search.call(params[:search]).last }.to_json
   end
 end

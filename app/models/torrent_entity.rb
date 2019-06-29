@@ -2,7 +2,9 @@ class TorrentEntity < ApplicationRecord
   include AASM
 
   belongs_to :transfer
-  validates :magnet_link, format: { with: MAGNET_LINK_REGEX }
+  belongs_to :torrent_post
+
+  validates :transfer, :torrent_post, presence: true
 
   enum status: {
     downloading: 1,

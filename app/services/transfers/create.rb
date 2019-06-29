@@ -2,11 +2,11 @@ module Transfers
   class Create < ApplicationService
     param :user
     param :params
+    option :torrent_post, default: -> { TorrentPost.find(params[:torrent_post_id]) }
 
     def call
-      transfer = Transfer.create!(user: user)
-      _, torrent_entity = TorrentEntities::Download.call(transfer, params[:magnet_link])
-      torrent_entity.update!(transfer: transfer)
+      transfer = Transfer.new(user: user)
+      TorrentEntities::Download.call(transfer, torrent_post)
       [:ok, transfer]
     end
   end

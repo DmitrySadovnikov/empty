@@ -18,6 +18,6 @@ class App < Sinatra::Base
   use ApplicationController
   use AuthController
   use TransfersController
-  use Web::V1::TrackerPostsController
+  use Web::V1::TorrentPostsController
   use Web::V1::TransfersController
 end
