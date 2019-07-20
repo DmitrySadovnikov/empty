@@ -2,14 +2,25 @@ class TorrentEntity < ApplicationRecord
   include AASM
 
   belongs_to :transfer
-  belongs_to :torrent_post
+  belongs_to :torrent_post, optional: true
+  belongs_to :torrent_file, optional: true
 
-  validates :transfer, :torrent_post, presence: true
+  validates :transfer, presence: true
+  validates :torrent_post, presence: true, if: :trigger_torrent_post?
+  validates :torrent_file, presence: true, if: :trigger_torrent_file?
+  validates :magnet_link, presence: true, if: :trigger_magnet_link?
+  validates :magnet_link, format: { with: MAGNET_LINK_REGEX }, if: :magnet_link
 
   enum status: {
     downloading: 1,
     downloaded: 2
   }, _prefix: :status
+
+  enum trigger: {
+    torrent_post: 1,
+    torrent_file: 2,
+    magnet_link: 3
+  }, _prefix: :trigger
 
   aasm column: :status, enum: true do
     after_all_transitions :log_state_change

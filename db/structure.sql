@@ -87,11 +87,26 @@ CREATE TABLE public.schema_migrations (
 CREATE TABLE public.torrent_entities (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     transfer_id uuid NOT NULL,
-    torrent_post_id uuid NOT NULL,
+    torrent_post_id uuid,
+    torrent_file_id uuid,
+    magnet_link character varying,
+    trigger integer NOT NULL,
     transmission_id integer,
     status integer NOT NULL,
     name character varying,
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: torrent_files; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.torrent_files (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    value character varying NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -188,6 +203,14 @@ ALTER TABLE ONLY public.torrent_entities
 
 
 --
+-- Name: torrent_files torrent_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.torrent_files
+    ADD CONSTRAINT torrent_files_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: torrent_posts torrent_posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -231,6 +254,13 @@ CREATE INDEX index_cloud_entities_on_parent_id ON public.cloud_entities USING bt
 --
 
 CREATE INDEX index_cloud_entities_on_transfer_id ON public.cloud_entities USING btree (transfer_id);
+
+
+--
+-- Name: index_torrent_entities_on_torrent_file_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_torrent_entities_on_torrent_file_id ON public.torrent_entities USING btree (torrent_file_id);
 
 
 --
@@ -293,6 +323,14 @@ ALTER TABLE ONLY public.cloud_entities
 
 
 --
+-- Name: torrent_entities fk_rails_52133845c9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.torrent_entities
+    ADD CONSTRAINT fk_rails_52133845c9 FOREIGN KEY (torrent_file_id) REFERENCES public.torrent_files(id);
+
+
+--
 -- Name: torrent_entities fk_rails_6bb2f562f5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -321,6 +359,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190605213353'),
 ('20190614085747'),
 ('20190623143710'),
+('20190623143715'),
 ('20190623143720');
 
 

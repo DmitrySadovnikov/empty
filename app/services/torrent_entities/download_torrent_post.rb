@@ -1,5 +1,5 @@
 module TorrentEntities
-  class Download < ApplicationService
+  class DownloadTorrentPost < ApplicationService
     param :transfer
     param :torrent_post
 
@@ -21,8 +21,8 @@ module TorrentEntities
     private
 
     def add_torrent
-      Transmission::Model::Torrent.add(arguments: { filename: torrent_post.magnet_link })
-    rescue DuplicateTorrentError => _
+      Transmission::Model::Torrent.add(arguments: { filename: torrent_entity.magnet_link })
+    rescue DuplicateTorrentError
       nil
     end
 
@@ -30,6 +30,8 @@ module TorrentEntities
       @torrent_entity ||= TorrentEntity.new(
         transfer: transfer,
         torrent_post: torrent_post,
+        magnet_link: torrent_post.magnet_link,
+        trigger: :torrent_post,
         status: :downloading
       )
     end

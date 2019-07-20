@@ -3,6 +3,10 @@ class TransfersController < ApplicationController
     erb :'transfers/index', {}, transfers: current_user.transfers
   end
 
+  get '/torrent_files/new' do
+    erb :'torrent_files/new'
+  end
+
   get '/transfers/new' do
     erb :'transfers/new'
   end

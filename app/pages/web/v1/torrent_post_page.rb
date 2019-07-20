@@ -26,7 +26,7 @@ module Web
 
       private
 
-      def bytes_to_megabytes (bytes)
+      def bytes_to_megabytes(bytes)
         bytes.to_i / (1024.0 * 1024.0)
       end
     end
