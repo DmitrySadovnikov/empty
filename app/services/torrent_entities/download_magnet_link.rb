@@ -6,10 +6,10 @@ module TorrentEntities
     def call
       return [:invalid, torrent_entity] unless torrent_entity.valid?
 
-      torrent = add_torrent
-      return [:no_torrent, torrent_entity] unless torrent
+      parsed_response = JSON.parse(response.body)
+      return [:no_torrent, torrent_entity] if parsed_response['result'] != 'success'
 
-      torrent_entity.transmission_id = torrent.id
+      torrent_entity.transmission_id = parsed_response['arguments']['id']
       ActiveRecord::Base.transaction do
         transfer.save!
         torrent_entity.save!
@@ -20,10 +20,38 @@ module TorrentEntities
 
     private
 
-    def add_torrent
-      Transmission::Model::Torrent.add(arguments: { filename: magnet_link })
-    rescue DuplicateTorrentError
-      nil
+    def request_body
+      {
+        method: 'torrent-add',
+        arguments: {
+          filename: magnet_link
+        }
+      }
+    end
+
+    def response
+      @response ||= begin
+        response = make_request
+        if response.response_code == 409
+          _, *response_headers = response.header_str.split(/[\r\n]+/).map(&:strip)
+          response_headers = Hash[response_headers.flat_map { |s| s.scan(/^(\S+): (.+)/) }]
+          Sinatra::Cache::RedisStore.new.write(
+            'x-transmission-session-id',
+            response_headers['X-Transmission-Session-Id']
+          )
+          response = make_request
+        end
+        response
+      end
+    end
+
+    def make_request
+      Curl.post(ENV['TRANSMISSION_URL'], request_body.to_json) do |curl|
+        curl.headers['Content-Type'] = 'application/json'
+        curl.headers['Accept'] = 'application/json'
+        curl.headers['X-Transmission-Session-Id'] =
+          Sinatra::Cache::RedisStore.new.read('x-transmission-session-id')
+      end
     end
 
     def torrent_entity

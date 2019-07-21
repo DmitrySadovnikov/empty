@@ -25,6 +25,7 @@ gem 'reverse_markdown'
 gem 'tram-page'
 gem 'rack-cors', require: 'rack/cors'
 gem 'carrierwave'
+gem 'redis-sinatra'
 
 group :development, :test do
   gem 'dotenv'
