@@ -5,14 +5,17 @@ module Transfers
 
     def call
       transfer = Transfer.new(user: user)
-      case trigger
-      when :torrent_post
-        TorrentEntities::DownloadTorrentPost.call(transfer, torrent_post)
-      when :torrent_file
-        TorrentEntities::DownloadTorrentFile.call(transfer, torrent_file)
-      when :magnet_link
-        TorrentEntities::DownloadMagnetLink.call(transfer, params[:magnet_link])
-      end
+      code, torrent_entity =
+        case trigger
+        when :torrent_post
+          TorrentEntities::DownloadTorrentPost.call(transfer, torrent_post)
+        when :torrent_file
+          TorrentEntities::DownloadTorrentFile.call(transfer, torrent_file)
+        when :magnet_link
+          TorrentEntities::DownloadMagnetLink.call(transfer, params[:magnet_link])
+        end
+      return [:invalid, torrent_entity.errors.messages] if code == :invalid
+
       [:ok, transfer]
     end
 
