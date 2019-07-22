@@ -1,5 +1,6 @@
 /tmp/*
 !/tmp/.gitkeep
+/public/uploads
 .idea
 .env.development
 .env.test

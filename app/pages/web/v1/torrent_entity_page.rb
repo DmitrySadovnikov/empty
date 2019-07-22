@@ -6,6 +6,7 @@ module Web
       section :name, value: -> { resource.name }
       section :status, value: -> { resource.status }
       section :created_at, value: -> { resource.created_at }
+      section :magnet_link, value: -> { resource.magnet_link }
     end
   end
 end
